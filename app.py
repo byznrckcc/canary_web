@@ -1,7 +1,7 @@
 import base64
 import uuid
-from flask import Flask, request, jsonify, render_template_string
-from sqlalchemy import create_engine
+from flask import Flask, request, jsonify, render_template_string, render_template
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from canary_web.models.forensics import Base, CanaryHit, ThreatLevel
 
@@ -32,6 +32,32 @@ FAKED_ERROR_TEMPLATE = """
 </body>
 </html>
 """
+
+# ── ROUTE: ADMIN DASHBOARD ──────────────────────────────────────────────────
+@app.route("/dashboard", methods=["GET"])
+def dashboard_view():
+    db = SessionLocal()
+    try:
+        # Son gelen alarmları en üstte gösterecek şekilde çekiyoruz
+        all_hits = db.query(CanaryHit).order_by(CanaryHit.created_at.desc()).all()
+        
+        # Metrikleri hesaplıyoruz
+        total_hits = len(all_hits)
+        critical_hits = db.query(CanaryHit).filter(CanaryHit.threat_level == ThreatLevel.CRITICAL).count()
+        unique_tokens = db.query(func.count(CanaryHit.token_id.distinct())).scalar() or 0
+        
+        return render_template(
+            "dashboard.html", 
+            hits=all_hits, 
+            total_hits=total_hits, 
+            critical_hits=critical_hits, 
+            unique_tokens=unique_tokens
+        )
+    except Exception as e:
+        print(f"[-] Dashboard yüklenirken hata oluştu: {e}")
+        return "Dashboard Error", 500
+    finally:
+        db.close()
 
 @app.route("/api/v1/tokens/generate", methods=["POST"])
 def generate_token():
