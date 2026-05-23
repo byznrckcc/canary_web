@@ -1,5 +1,14 @@
+# Python Önbellek Dosyaları
 __pycache__/
 *.pyc
+
+# Sanal Ortamlar
 venv/
 .venv/
+
+# Hassas Çevresel Değişkenler (OWASP Hardening)
+.env
+
+# Yerel Veritabanı ve Günlük Kayıtları
 canary_dev.db
+*.log

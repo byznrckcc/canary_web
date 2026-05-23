@@ -15,9 +15,13 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from canary_web.models.forensics import Base, CanaryHit, ThreatLevel
 
-# ── 1. GÜVENLİK VE STRATEJİK YAPILANDIRMA MİMARİSİ ───────────────────────────
+# ── 1. GÜVENLİK ALTYAPISI: .ENV ÇEVRESEL DEĞİŞKEN YÜKLEYİCİSİ ────────────────
+from dotenv import load_dotenv
+load_dotenv()  # .env dosyasındaki tüm gizli siber anahtarları hafızaya yükler
+
 class CyberCommandConfig:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "ultra_secure_deception_mesh_cipher_2026")
+    # Sabit şifre silindi! Artık sadece .env içinden okur, yoksa rastgele güvenli key üretir.
+    SECRET_KEY = os.environ.get("SECRET_KEY", os.urandom(32).hex())
     DATABASE_URI = "sqlite:///canary_dev.db"
     DEBUG = True
     PORT = 5000
@@ -150,7 +154,6 @@ def dashboard_view():
             hit.parsed_forensic_detail = parse_forensic_intelligence(hit.user_agent)
             
             # ── MR. ROBOT ADLİ DEŞİFRE PARÇALAYICI ──
-            # Eski logların kırılmaması için varsayılan değerler atıyoruz
             hit.extracted_lan_ip = "Hidden / VPN Active"
             hit.extracted_hw_id = "Bypassed Platform Identity"
             
@@ -167,7 +170,6 @@ def dashboard_view():
             if "hidden" not in hit.extracted_lan_ip.lower(): score += 20
             hit.calculated_risk_score = min(score, 100)
             
-            # STIX Veri Kümesine Yeni Donanımsal Kanıtları Ekliyoruz
             stix_structure = {
                 "type": "indicator", "spec_version": "2.1",
                 "id": f"indicator--{uuid.uuid4()}",
@@ -197,7 +199,6 @@ def generate_token():
 # ── 7. BAL KÜPÜ GİRİŞ NOKTASI (WEBBEACON + DE-ANONYMIZATION MOTORU) ──────────
 @app.route("/t/<uuid_id>", methods=["GET"])
 def trigger_point(uuid_id):
-    # SALDIRGANIN GERÇEK LAN IP VE EKRAN KARTI KİMLİĞİNİ GİZLİCE SIZDIRAN SEKTÖREL BETİK
     telemetry_js_template = """
     <!DOCTYPE html>
     <html>
