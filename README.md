@@ -120,11 +120,3 @@ canary-web/
 ```
 
 ---
-
-## 👤 Geliştirici Proje Künyesi
-
-* **Adı Soyadı:** Beyzanur Çakıcı
-* **Öğrenci Numarası:** 2420191032
-* **Bölüm:** Bilişim Güvenliği Teknolojisi
-* **Kurum:** İstinye Üniversitesi
-* **Ders / Kapsam:** Güvenli Web Geliştirme Final Projesi Ödevi
