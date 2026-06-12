@@ -30,7 +30,6 @@ Sistem, geleneksel pasif bal küpü (honeypot) mantığının ötesine geçerek,
 WELL DONE ! :) @keyvanarasteh 
 
 
-İzlemek için tıklayın: 🎥 [Project Demo Video](simulation.mp4)
 
 ## 🚀 EVDE BAĞIMSIZ TEST VE SİMÜLASYON KILAVUZU 
 
